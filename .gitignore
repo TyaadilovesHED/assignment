@@ -1,0 +1,9 @@
+.venv/
+.env
+__pycache__/
+*.pyc
+products.db
+/static/node_modules/
+.vscode/
+.DS_Store
+.idea/
