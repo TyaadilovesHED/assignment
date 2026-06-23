@@ -16,7 +16,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 DB_PATH = Path(__file__).with_name("products.db")
-DATABASE_URL = os.environ.get("postgresql://assignment_db_9fl0_user:xKW2pAUT8Vu6tichniqvnUyu1tJsBYCh@dpg-d8t3e3mrnols73a3olag-a/assignment_db_9fl0")
+DATABASE_URL = os.environ.get("DATABASE_URL")
 STATIC_DIR = Path(__file__).with_name("static")
 USE_POSTGRES = DATABASE_URL is not None
 app = FastAPI(
