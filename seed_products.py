@@ -63,6 +63,7 @@ def generate_products(total: int = 200_000) -> list[tuple[str, str, float, str, 
 def seed(products: list[tuple[str, str, float, str, str]]) -> None:
     if DATABASE_URL:
         with psycopg.connect(DATABASE_URL, autocommit=True) as connection:
+            # create table/indexes using connection.execute (psycopg supports this)
             connection.execute("DROP TABLE IF EXISTS products;")
             connection.execute(
                 """
@@ -76,10 +77,14 @@ def seed(products: list[tuple[str, str, float, str, str]]) -> None:
                 );
                 """
             )
-            connection.executemany(
-                "INSERT INTO products (name, category, price, created_at, updated_at) VALUES (%s, %s, %s, %s, %s);",
-                products,
-            )
+
+            # Use a cursor for executemany; psycopg.Connection doesn't have executemany
+            with connection.cursor() as cur:
+                cur.executemany(
+                    "INSERT INTO products (name, category, price, created_at, updated_at) VALUES (%s, %s, %s, %s, %s);",
+                    products,
+                )
+
             connection.execute(
                 "CREATE INDEX IF NOT EXISTS idx_products_created_at_id ON products(created_at DESC, id DESC);"
             )
